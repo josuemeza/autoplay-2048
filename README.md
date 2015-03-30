@@ -6,5 +6,5 @@ Boot created by Josue Meza.
 
 <strong>Josue Meza Peña.</strong>
 <p>Web & iOS developer.</p>
-<a href="mailto:contacto@josuemeza.com">contacto@josuemeza.com</a>
-<a href="http://www.josuemeza.com">www.josuemeza.com</a>
+<p><a href="mailto:contacto@josuemeza.com">contacto@josuemeza.com</a></p>
+<p><a href="http://www.josuemeza.com">www.josuemeza.com</a></p>
