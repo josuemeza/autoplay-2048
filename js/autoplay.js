@@ -11,6 +11,7 @@ function Autoplay() {
     		LEFT: 37,
     		RIGHT: 39
     	},
+        // Methods
     	isEqualState: function(gameState1, gameState2) {
     		if(gameState1 == null || gameState2 == null) return false;
     		var cells1 = gameState1.grid.cells;
@@ -27,7 +28,6 @@ function Autoplay() {
     		}
     		return true;
     	},
-    	// Methods
         selectMovement: function() {
         	var gameState = $.parseJSON(localStorage.gameState);
         	var vertical = 3, horizontal = 3;
@@ -66,12 +66,11 @@ function Autoplay() {
             document.body.dispatchEvent ? document.body.dispatchEvent(eventObject) : document.body.fireEvent('onkeydown', eventObject); // for old browsers
         },
         run: function() {
-        	console.log(this.movementsCounter++);
+        	console.log('Cantidad de movimientos: ' + this.movementsCounter++);
     		var movement = this.selectMovement();
     		this.triggerKeyevent(movement);
     		var gameState = $.parseJSON(localStorage.gameState);
     		if(this.isEqualState(this.lastGameState, gameState)) return;
-    		console.log('son distintos');
     		this.lastGameState = gameState;
     		setTimeout(function() { autoplay.run(); }, 500);
         }
