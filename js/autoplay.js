@@ -5,11 +5,13 @@ function Autoplay() {
     	// Attributes
     	lastGameState: null,
     	movementsCounter: 0,
+        rescueMoves: 0,
     	movements: {
     		UP: 38,
     		DOWN: 40,
     		LEFT: 37,
-    		RIGHT: 39
+    		RIGHT: 39,
+            STOP: null
     	},
         // Methods
     	isEqualState: function(gameState1, gameState2) {
@@ -29,34 +31,42 @@ function Autoplay() {
     		return true;
     	},
         selectMovement: function() {
+            // Actual game state
         	var gameState = $.parseJSON(localStorage.gameState);
+
+            // Rescue move
+            if(this.isEqualState(this.lastGameState, gameState)) {
+                this.rescueMoves++;
+                if(this.rescueMoves > 4) return this.movements.STOP;
+                return this.movements.UP;
+            }
+            this.rescueMoves = 0;
+
+            // Safe moves
         	var vertical = 3, horizontal = 3;
         	var verticalTest = 2, horizontalTest = 2;
-        	while(true) {
-        		// Set pivot
-    			var downCell = gameState.grid.cells[horizontal][vertical];
-    			var downValue = downCell != null ? downCell.value : null;
-    			if(downCell == null) {
-    				vertical--;
-    				if(vertical > 1) {
-    					verticalTest = vertical - 1;
-    					continue;
-    				}
-    				return this.movements.RIGHT;
-    			} else {
-    				// Down cell was defined. Search up cell.
-    				var upCell = gameState.grid.cells[horizontal][verticalTest];
-    				var upValue = upCell != null ? upCell.value : null;
-    				if(upCell == null) {
-    					verticalTest--;
-    					if(verticalTest >= 0) continue;
-    					return this.movements.RIGHT;
-    				}
-    				// Up cell was defined. Test in vertical for down movements
-    				if(upValue == downValue) return this.movements.DOWN;
-    				else return this.movements.RIGHT;
-    			}
-        	}
+            while(true) {
+                var lastColumn = gameState.grid.cells[horizontal];
+                if(lastColumn[0]==null && lastColumn[1]==null && lastColumn[2]==null && lastColumn[3]==null) {
+                    return this.movements.RIGHT;
+                } else if(lastColumn[3]==null) {
+                    return this.movements.DOWN;
+                } else {
+                    var downIndex = 3, upIndex = 2;
+                    while(downIndex>0 && upIndex>=0) {
+                        if(lastColumn[upIndex] == null) {
+                            upIndex--;
+                        } else if(lastColumn[downIndex].value == lastColumn[upIndex].value) {
+                            return this.movements.DOWN;
+                        } else {
+                            downIndex = upIndex;
+                            upIndex--;
+                        }
+                    }
+                    return this.movements.RIGHT;
+                }
+
+            }
         },
         triggerKeyevent: function(keyCode) {
             var eventObject = document.createEventObject ? document.createEventObject() : document.createEvent("Events");
@@ -67,12 +77,11 @@ function Autoplay() {
         },
         run: function() {
         	console.log('Cantidad de movimientos: ' + this.movementsCounter++);
-    		var movement = this.selectMovement();
-    		this.triggerKeyevent(movement);
-    		var gameState = $.parseJSON(localStorage.gameState);
-    		if(this.isEqualState(this.lastGameState, gameState)) return;
-    		this.lastGameState = gameState;
-    		setTimeout(function() { autoplay.run(); }, 500);
+            var movement = this.selectMovement();
+            if(movement == this.movements.STOP) return;
+            this.lastGameState = $.parseJSON(localStorage.gameState);
+            this.triggerKeyevent(movement);
+            setTimeout(function() { autoplay.run(); }, 200);
         }
     }
 }
@@ -80,7 +89,7 @@ function Autoplay() {
 $(document).ready(function() {
 
 	$('.autoplay-button').click(function() {
-		autoplay = new Autoplay();
+		if(autoplay == null) autoplay = new Autoplay();
 		autoplay.run();
 	});
 
