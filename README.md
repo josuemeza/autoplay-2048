@@ -11,3 +11,8 @@ Run it [here](http://josuemeza.com/autoplay-2048)
 	<a href="mailto:contacto@josuemeza.com">contacto@josuemeza.com</a><br/>
 	<a href="http://www.josuemeza.com">www.josuemeza.com</a><br/>
 </p>
+<p>
+	<strong>Maximiliano Neira Maibee</strong><br/>
+	Web developer.<br/>
+	<a href="mailto:maxneiram@gmail.com">maxneiram@gmail.com</a><br/>
+</p>
