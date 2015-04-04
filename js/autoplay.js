@@ -38,7 +38,14 @@ function Autoplay() {
             if(this.isEqualState(this.lastGameState, gameState)) {
                 this.rescueMoves++;
                 if(this.rescueMoves > 4) return this.movements.STOP;
-                return this.movements.UP;
+                if(this.rescueMoves == 1) {
+                    return this.movements.RIGHT;
+                } else if(this.rescueMoves == 2) {
+                    return this.movements.DOWN;
+                } else if(this.rescueMoves == 3) {
+                    return this.movements.UP;
+                }
+                return this.movements.LEFT;
             }
             this.rescueMoves = 0;
 
